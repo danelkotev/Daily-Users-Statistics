@@ -1,0 +1,12 @@
+logs
+target
+.idea
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/.DS_Store
+.DS_Store
+package-lock.json
+.idea

@@ -1,0 +1,27 @@
+version: '3.6'
+services:
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ACCESS_KEY: access
+      MINIO_SECRET_KEY: topsecret
+    ports:
+      - 9000:9000
+    command: server /tmp/minio/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  create-bucket:
+    image: minio/mc:RELEASE.2019-10-02T19-41-02Z
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://minio:9000 access topsecret --api s3v4;
+      /usr/bin/mc mb myminio/Clickstream;
+      /usr/bin/mc policy set public myminio/Clickstream;
+      exit 0;
+      "
